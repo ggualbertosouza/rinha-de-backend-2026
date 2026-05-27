@@ -9,6 +9,9 @@ import (
 )
 
 func Load(path string) ([]Reference, error) {
+	startTotal := time.Now()
+
+	// =========
 	startFile := time.Now()
 
 	file, err := os.Open(path)
@@ -19,9 +22,8 @@ func Load(path string) ([]Reference, error) {
 
 	log.Printf("open file took: %s", time.Since(startFile))
 
-	// =========
-
-	startGz := time.Now()
+	// ========
+	startDecompress := time.Now()
 
 	gzipReader, err := gzip.NewReader(file)
 	if err != nil {
@@ -29,10 +31,10 @@ func Load(path string) ([]Reference, error) {
 	}
 	defer gzipReader.Close()
 
-	log.Printf("decompress gz took: %s", time.Since(startGz))
+	log.Printf("decompress took: %s", time.Since(startDecompress))
 
+	// ==========
 	startDecode := time.Now()
-
 	var references []Reference
 
 	decoder := json.NewDecoder(gzipReader)
@@ -41,6 +43,8 @@ func Load(path string) ([]Reference, error) {
 	}
 
 	log.Printf("decode took: %s", time.Since(startDecode))
+
+	log.Printf("total time took: %s", time.Since(startTotal))
 
 	return references, nil
 }

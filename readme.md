@@ -4,9 +4,13 @@ Nessa etapa estou lendo o arquivo, descompactando e por fim fazendo decode.
 
 **Primeiros testes**
 ```
-2026/05/26 22:23:48 decompress gz took: 27.38µs
-2026/05/26 22:23:55 decode took: 7.24995921s
-2026/05/26 22:23:55 dataset loaded: 3000000 references
+2026/05/26 22:27:44 server starting on 8080
+2026/05/26 22:27:44 processing dataset
+2026/05/26 22:27:44 open file took: 21.41µs
+2026/05/26 22:27:44 decompress gz took: 27.61µs
+2026/05/26 22:27:51 decode took: 7.270271159s
+2026/05/26 22:27:51 total time took: 7.270358649s
+2026/05/26 22:27:51 dataset loaded: 3000000 references
 ```
 
 ---
