@@ -1,7 +1,10 @@
 package server
 
 import (
+	"fmt"
 	"net/http"
+
+	"github.com/ggualbertosouza/rinha-de-backend-2026/internal/app"
 )
 
 func ReadyHandler(w http.ResponseWriter, r *http.Request) {
@@ -9,7 +12,12 @@ func ReadyHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	WriteResponse(w, "Ready handler")
+	if !app.Ready.Load() {
+		w.WriteHeader(http.StatusServiceUnavailable)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
 }
 
 func FraudScoreHandler(w http.ResponseWriter, r *http.Request) {
@@ -19,5 +27,6 @@ func FraudScoreHandler(w http.ResponseWriter, r *http.Request) {
 
 	SetJSON(w)
 
-	WriteResponse(w, "Fraud score handler")
+	w.WriteHeader(http.StatusOK)
+	fmt.Fprint(w, "Fraud score handler")
 }

@@ -1,12 +1,15 @@
 package server
 
 import (
-	"fmt"
 	"net/http"
 )
 
+var (
+	headerJSON = []string{"application/json"}
+)
+
 func SetJSON(w http.ResponseWriter) {
-	w.Header().Set("Content-Type", "application/json")
+	w.Header()["Content-Type"] = headerJSON
 }
 
 func AllowMethod(w http.ResponseWriter, r *http.Request, method string) bool {
@@ -16,9 +19,4 @@ func AllowMethod(w http.ResponseWriter, r *http.Request, method string) bool {
 	}
 
 	return true
-}
-
-func WriteResponse(w http.ResponseWriter, message string) {
-	w.WriteHeader(http.StatusOK)
-	fmt.Fprintf(w, message)
 }
