@@ -11,7 +11,7 @@ import (
 func main() {
 	go loadDataset()
 
-	srv := server.New("8080")
+	srv := server.New("9999")
 
 	if err := srv.Start(); err != nil {
 		log.Fatal(err)
