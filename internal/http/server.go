@@ -4,6 +4,8 @@ import (
 	"log"
 	"net/http"
 	"time"
+
+	"github.com/ggualbertosouza/rinha-de-backend-2026/internal/http/handlers"
 )
 
 type Server struct {
@@ -19,8 +21,8 @@ func New(port string) *Server {
 func (s *Server) Start() error {
 	mux := http.NewServeMux()
 
-	mux.HandleFunc("/ready", ReadyHandler)
-	mux.HandleFunc("/fraud-score", FraudScoreHandler)
+	mux.HandleFunc("/ready", handlers.ReadyHandler)
+	mux.HandleFunc("/fraud-score", handlers.FraudScoreHandler)
 
 	srv := &http.Server{
 		Addr:              ":" + s.Port,

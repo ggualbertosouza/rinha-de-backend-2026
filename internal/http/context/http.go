@@ -1,6 +1,7 @@
-package server
+package serverContext
 
 import (
+	"encoding/json"
 	"net/http"
 )
 
@@ -19,4 +20,9 @@ func AllowMethod(w http.ResponseWriter, r *http.Request, method string) bool {
 	}
 
 	return true
+}
+
+func ValidatePayload[T any](r *http.Request) (payload T, err error) {
+	err = json.NewDecoder(r.Body).Decode(&payload)
+	return
 }
