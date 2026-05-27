@@ -1,20 +1,15 @@
-Entendendo o projeto
 
-1. Server HTTP
-    1.1. Rota `/ready`
-    1.2. Rota `/fraud-score`
+# Load dataset
+Nessa etapa estou lendo o arquivo, descompactando e por fim fazendo decode.
 
-2. Load dataset on init
-    1.1. Lê arquivos ./resource
-    1.2. Parser
-    1.3. Otimiza estrutura
-    1.4. Manter em memória
-    1.5. Disponibiliza a API
+**Primeiros testes**
+```
+2026/05/26 22:23:48 decompress gz took: 27.38µs
+2026/05/26 22:23:55 decode took: 7.24995921s
+2026/05/26 22:23:55 dataset loaded: 3000000 references
+```
 
-!! Endpoint de `/ready` só vai informar que a API está pronta após informações já estarem em memória
-
-Enquanto dataset não estiver pronto -> ready = false/503
-Se estiver pronto -> ready = true/200
+---
 
 3. Endpoint `/fraud-score`
     3.1. Recebe json
