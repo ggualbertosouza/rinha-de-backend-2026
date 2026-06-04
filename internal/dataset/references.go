@@ -2,10 +2,12 @@ package dataset
 
 import (
 	"compress/gzip"
-	"encoding/json"
+	"io"
 	"log"
 	"os"
 	"time"
+
+	"github.com/bytedance/sonic"
 )
 
 type Reference struct {
@@ -35,9 +37,13 @@ func LoadReferences(path string) ([]Reference, error) {
 
 	var rawRefs []rawReference
 
-	decoder := json.NewDecoder(gzipReader)
+	bytes, err := io.ReadAll(gzipReader)
+	if err != nil {
+		return nil, err
+	}
 
-	if err := decoder.Decode(&rawRefs); err != nil {
+	err = sonic.Unmarshal(bytes, &rawRefs)
+	if err != nil {
 		return nil, err
 	}
 

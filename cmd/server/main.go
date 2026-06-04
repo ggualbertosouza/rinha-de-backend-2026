@@ -31,3 +31,14 @@ func main() {
 		log.Fatal(err)
 	}
 }
+
+/*
+	json basic
+	2026/06/04 11:23:59 loaded 3000000 references in 6.894391495s
+	2026/06/04 11:23:59 load normalization in 47.11µs
+	2026/06/04 11:23:59 load mccRisk in 14.8µs
+	2026/06/04 11:23:59 server starting on 9999
+
+	Sonic
+	
+*/

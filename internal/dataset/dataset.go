@@ -6,6 +6,12 @@ type Dataset struct {
 	Normalization Normalization
 }
 
+/*
+	1. Abrir o arquivo
+	2. Ler tudo em memóriaa
+	3. Fazer parser do buffer inteiro
+*/
+
 func Load(
 	referencesPath, normalizationPath, mccRiskPath string,
 ) (*Dataset, error) {

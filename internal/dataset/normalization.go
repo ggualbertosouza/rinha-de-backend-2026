@@ -1,10 +1,12 @@
 package dataset
 
 import (
-	"encoding/json"
+	"io"
 	"log"
 	"os"
 	"time"
+
+	"github.com/bytedance/sonic"
 )
 
 type Normalization struct {
@@ -28,7 +30,15 @@ func LoadNormalization(path string) (Normalization, error) {
 	}
 	defer file.Close()
 
-	err = json.NewDecoder(file).Decode(&normalization)
+	bytes, err := io.ReadAll(file)
+	if err != nil {
+		return normalization, err
+	}
+
+	err = sonic.Unmarshal(bytes, &normalization)
+	if err != nil {
+		return normalization, err
+	}
 
 	log.Printf("load normalization in %s", time.Since(start))
 
