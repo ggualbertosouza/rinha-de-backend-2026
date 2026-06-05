@@ -8,10 +8,10 @@ import (
 	"net/http/httptest"
 	"os"
 
+	"github.com/ggualbertosouza/rinha-de-backend-2026/internal/api/handlers"
 	"github.com/ggualbertosouza/rinha-de-backend-2026/internal/app"
 	"github.com/ggualbertosouza/rinha-de-backend-2026/internal/dataset"
 	"github.com/ggualbertosouza/rinha-de-backend-2026/internal/fraud"
-	"github.com/ggualbertosouza/rinha-de-backend-2026/internal/http/handlers"
 )
 
 func main() {

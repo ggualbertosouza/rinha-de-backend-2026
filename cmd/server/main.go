@@ -3,13 +3,26 @@ package main
 import (
 	"log"
 
+	"github.com/ggualbertosouza/rinha-de-backend-2026/internal/api"
 	"github.com/ggualbertosouza/rinha-de-backend-2026/internal/app"
 	"github.com/ggualbertosouza/rinha-de-backend-2026/internal/dataset"
 	"github.com/ggualbertosouza/rinha-de-backend-2026/internal/fraud"
-	server "github.com/ggualbertosouza/rinha-de-backend-2026/internal/http"
+	"github.com/ggualbertosouza/rinha-de-backend-2026/internal/worker"
 )
 
 func main() {
+	Init()
+
+	mux := api.NewMux()
+
+	for i := 0; i < 2; i++ {
+		go worker.Run("/tmp/lb.sock", mux)
+	}
+
+	select {}
+}
+
+func Init() {
 	ds, err := dataset.Load(
 		"resources/references.json.gz",
 		"resources/normalization.json",
@@ -19,15 +32,11 @@ func main() {
 		log.Fatal(err)
 	}
 
-	app.Ready.Store(true)
-
 	app.Vectorize = fraud.NewVectorizer(ds.Normalization, ds.MccRisk)
 	index := fraud.NewBruteForce(ds.References)
 	app.Detector = fraud.NewDetector(index)
 
-	srv := server.New("9999")
+	app.Ready.Store(true)
 
-	if err := srv.Start(); err != nil {
-		log.Fatal(err)
-	}
+	log.Println("application ready")
 }
