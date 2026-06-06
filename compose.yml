@@ -1,0 +1,48 @@
+x-go: &go
+  platform: linux/amd64
+  restart: unless-stopped
+
+services:
+  api1:
+    <<: *go
+    image: github.com/ggualbertosouza/rinha-de-backend-2026:latest
+    command: ["/server", "/sockets/api1.sock", "/index"]
+    volumes:
+      - sockets:/sockets
+    deploy:
+      resources:
+        limits:
+          cpus: "0.45"
+          memory: "150MB"
+
+  api2:
+    <<: *go
+    image: github.com/ggualbertosouza/rinha-de-backend-2026:latest
+    command: ["/server", "/sockets/api2.sock", "/index"]
+    volumes:
+      - sockets:/sockets
+    deploy:
+      resources:
+        limits:
+          cpus: "0.45"
+          memory: "150MB"
+
+  lb:
+    <<: *go
+    image: github.com/ggualbertosouza/rinha-de-backend-2026:latest
+    command: ["/lb", "9999", "/sockets/api1.sock", "/sockets/api2.sock"]
+    ports:
+      - "9999:9999"
+    volumes:
+      - sockets:/sockets
+    depends_on:
+      - api1
+      - api2
+    deploy:
+      resources:
+        limits:
+          cpus: "0.10"
+          memory: "50MB"
+
+volumes:
+  sockets:
