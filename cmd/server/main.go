@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"os"
 
 	"github.com/ggualbertosouza/rinha-de-backend-2026/internal/api"
 	"github.com/ggualbertosouza/rinha-de-backend-2026/internal/app"
@@ -11,12 +12,14 @@ import (
 )
 
 func main() {
+	socketPath := os.Getenv("LB_SOCKET")
+
 	Init()
 
 	mux := api.NewMux()
 
 	for i := 0; i < 2; i++ {
-		go worker.Run("/tmp/lb.sock", mux)
+		go worker.Run(socketPath, mux)
 	}
 
 	select {}
@@ -24,9 +27,9 @@ func main() {
 
 func Init() {
 	ds, err := dataset.Load(
-		"resources/references.json.gz",
-		"resources/normalization.json",
-		"resources/mcc_risk.json",
+		"/resources/references.json.gz",
+		"/resources/normalization.json",
+		"/resources/mcc_risk.json",
 	)
 	if err != nil {
 		log.Fatal(err)

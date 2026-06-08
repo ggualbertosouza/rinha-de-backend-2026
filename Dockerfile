@@ -15,9 +15,8 @@ COPY . .
 RUN go build -trimpath -ldflags="-s -w" -o /out/server ./cmd/server
 RUN go build -trimpath -ldflags="-s -w" -o /out/lb ./cmd/lb
 
-FROM gcr.io/distroless/static-debian12:nonroot
+FROM gcr.io/distroless/static-debian12
 
 COPY --from=build /out/server /server
 COPY --from=build /out/lb /lb
-
-COPY index/ /index/
+COPY resources /resources
