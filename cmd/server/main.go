@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/ggualbertosouza/rinha-de-backend-2026/internal/api"
+	"github.com/ggualbertosouza/rinha-de-backend-2026/internal/api/middleware"
 	"github.com/ggualbertosouza/rinha-de-backend-2026/internal/app"
 	"github.com/ggualbertosouza/rinha-de-backend-2026/internal/dataset"
 	"github.com/ggualbertosouza/rinha-de-backend-2026/internal/fraud"
@@ -17,9 +18,10 @@ func main() {
 	Init()
 
 	mux := api.NewMux()
+	handler := middleware.Logging(mux)
 
 	for i := 0; i < 2; i++ {
-		go worker.Run(socketPath, mux)
+		go worker.Run(socketPath, handler)
 	}
 
 	select {}
