@@ -13,11 +13,13 @@ func (l *LoadBalancer) ListenTcp() error {
 
 	l.listener = listener
 
+	log.Printf("[LB] listening tcp port :%s", l.httpPort)
 	for {
 		conn, err := listener.Accept()
 
 		if err != nil {
 			if ne, ok := err.(*net.OpError); ok && !ne.Temporary() {
+				log.Printf("[LB] error: %v", err)
 				return nil
 			}
 
@@ -61,3 +63,22 @@ func (l *LoadBalancer) handleTCP(conn net.Conn) {
 
 	log.Printf("[LB] connection dispatched worker=%d", worker.ID)
 }
+
+/*
+	- Lb process
+		0 -> stdin
+		1 -> stdout
+		2 -> stderr
+
+	- Worker 1 process
+		-> Aponta para stdout do lb process
+
+	- Worker 2 process
+		-> Aponta para stdout do lb process
+
+	Dessa forma vamos ter apenas um stdout e stderr.
+
+	possíveis problemas caso seja possível.
+	- concorrência
+	- race condition
+*/

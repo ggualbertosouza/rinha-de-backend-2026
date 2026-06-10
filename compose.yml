@@ -1,49 +1,35 @@
+x-common: &common
+  build:
+    context: .
+    dockerfile: Dockerfile
+  image: rinha-local
+  volumes:
+    - sockets:/sockets
+  restart: unless-stopped
+
 services:
   lb:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    image: rinha-local
+    container_name: rinha-lb
+    <<: *common
     command:
       - /lb
     environment:
-      LB_PORT: "9999"
+      LB_PORT: "8080"
       LB_SOCKET: /sockets/lb.sock
     ports:
-      - "9999:9999"
-    volumes:
-      - sockets:/sockets
-    restart: unless-stopped
+      - "9999:8080"
 
-  api1:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    image: rinha-local
+  workers:
+    container_name: rinha-workers
+    <<: *common
     command:
       - /server
     environment:
       LB_SOCKET: /sockets/lb.sock
-    volumes:
-      - sockets:/sockets
+      WORKERS_AMOUNT: 2
     depends_on:
       - lb
-    restart: unless-stopped
-
-  api2:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    image: rinha-local
-    command:
-      - /server
-    environment:
-      LB_SOCKET: /sockets/lb.sock
-    volumes:
-      - sockets:/sockets
-    depends_on:
-      - lb
-    restart: unless-stopped
 
 volumes:
   sockets:
+    name: rinha-volume

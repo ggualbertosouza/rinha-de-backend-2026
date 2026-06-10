@@ -1,6 +1,7 @@
 package loadBalancer
 
 import (
+	"log"
 	"net"
 	"os"
 )
@@ -20,10 +21,12 @@ func (l *LoadBalancer) ListenUnix() error {
 
 	l.unixListener = listener
 
+	log.Printf("[LB] listenig unix socket %s", addr)
 	for {
 		conn, err := listener.AcceptUnix()
 		if err != nil {
 			if ne, ok := err.(*net.OpError); ok && !ne.Temporary() {
+				log.Printf("[LB] error: %v", err)
 				return nil
 			}
 
@@ -66,6 +69,8 @@ func (l *LoadBalancer) registerWorker(conn *net.UnixConn) {
 			Conn:     conn,
 			socketFD: socketFD,
 		}
+
+		log.Printf("[LB] worker %d registered", len(current)+1)
 
 		if l.workers.CompareAndSwap(currentPtr, &next) {
 			return

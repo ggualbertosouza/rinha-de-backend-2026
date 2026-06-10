@@ -18,10 +18,7 @@ func (b *BruteForce) Search(query Vector, k int) []Neighbor {
 	neighbors := make([]Neighbor, 0, len(b.Dataset))
 
 	for _, ref := range b.Dataset {
-		dist := Distance(
-			query,
-			ref.Vector,
-		)
+		dist := Distance(query, ref.Vector)
 
 		neighbors = append(
 			neighbors,
@@ -35,8 +32,7 @@ func (b *BruteForce) Search(query Vector, k int) []Neighbor {
 	sort.Slice(
 		neighbors,
 		func(i, j int) bool {
-			return neighbors[i].Distance <
-				neighbors[j].Distance
+			return neighbors[i].Distance < neighbors[j].Distance
 		},
 	)
 

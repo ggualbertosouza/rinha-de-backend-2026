@@ -1,47 +1,38 @@
 package main
 
 import (
-	"log"
 	"os"
+	"strconv"
 
 	"github.com/ggualbertosouza/rinha-de-backend-2026/internal/api"
 	"github.com/ggualbertosouza/rinha-de-backend-2026/internal/api/middleware"
 	"github.com/ggualbertosouza/rinha-de-backend-2026/internal/app"
-	"github.com/ggualbertosouza/rinha-de-backend-2026/internal/dataset"
-	"github.com/ggualbertosouza/rinha-de-backend-2026/internal/fraud"
 	"github.com/ggualbertosouza/rinha-de-backend-2026/internal/worker"
 )
 
 func main() {
-	socketPath := os.Getenv("LB_SOCKET")
+	sp := os.Getenv("LB_SOCKET")
+	wa := os.Getenv("WORKERS_AMOUNT")
 
-	Init()
+	app.Init()
 
 	mux := api.NewMux()
 	handler := middleware.Logging(mux)
 
-	for i := 0; i < 2; i++ {
-		go worker.Run(socketPath, handler)
+	for i := 0; i < getEnvInt(wa, 2); i++ {
+		go worker.Run(sp, handler)
 	}
 
 	select {}
 }
 
-func Init() {
-	ds, err := dataset.Load(
-		"/resources/references.json.gz",
-		"/resources/normalization.json",
-		"/resources/mcc_risk.json",
-	)
+func getEnvInt(key string, defaultValue int) int {
+	value := os.Getenv(key)
+
+	n, err := strconv.Atoi(value)
 	if err != nil {
-		log.Fatal(err)
+		return defaultValue
 	}
 
-	app.Vectorize = fraud.NewVectorizer(ds.Normalization, ds.MccRisk)
-	index := fraud.NewBruteForce(ds.References)
-	app.Detector = fraud.NewDetector(index)
-
-	app.Ready.Store(true)
-
-	log.Println("application ready")
+	return n
 }
