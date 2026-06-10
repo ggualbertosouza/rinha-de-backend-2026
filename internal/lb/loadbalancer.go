@@ -7,22 +7,17 @@ import (
 )
 
 type LoadBalancer struct {
-	httpPort string
-	unixPath string
-
+	httpPort     string
+	unixPath     string
 	listener     net.Listener
 	unixListener *net.UnixListener
-
-	workers atomic.Pointer[[]*Worker]
-
-	nextWorker atomic.Uint64
+	workers      atomic.Pointer[[]*Worker]
+	nextWorker   atomic.Uint64
 }
 
 type Worker struct {
-	ID int
-
-	Conn *net.UnixConn
-
+	ID       int
+	Conn     *net.UnixConn
 	socketFD int
 }
 
